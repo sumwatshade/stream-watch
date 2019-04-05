@@ -1,9 +1,9 @@
 import React from 'react';
 // import fetch from 'isomorphic-unfetch';
-
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
+import Nav from '../components/nav';
 import Game from '../components/game';
 
 import mockRes from '../test/sample';
@@ -17,14 +17,18 @@ const styles = theme => ({
 const Index = (props) => {
   const { classes: { root }, streamData } = props;
   return (
-    <Grid container direction="column" justify="center" alignItems="center" spacing={8} className={root}>
-      <Grid item>
-        <Typography variant="h1">NBA Games</Typography>
+    <div>
+      <Nav />
+      <Grid container direction="column" justify="center" alignItems="center" spacing={8} className={root}>
+        <Grid item>
+          <Typography variant="h1">NBA Games</Typography>
+        </Grid>
+        {streamData.map(o => (o.title.indexOf('Game Thread') < 0 ? null : (
+          <Game key={`game-${o.title}`} gameData={o} />
+        )))}
       </Grid>
-      {streamData.map(o => (o.title.indexOf('Game Thread') < 0 ? null : (
-        <Game key={`game-${o.title}`} gameData={o} />
-      )))}
-    </Grid>
+    </div>
+
   );
 };
 

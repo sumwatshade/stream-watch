@@ -2,10 +2,12 @@ import React from 'react';
 import Link from 'next/link';
 
 const links = [
-  { href: 'https://github.com/segmentio/create-next-app', label: 'Github' },
+  { href: '/nba-streams', label: 'NBA' },
 ].map((link) => {
-  link.key = `nav-link-${link.href}-${link.label}`;
-  return link;
+  const res = Object.assign({}, link, {
+    key: `nav-link-${link.href}-${link.label}`,
+  });
+  return res;
 });
 
 const Nav = () => (
@@ -13,14 +15,14 @@ const Nav = () => (
     <ul>
       <li>
         <Link prefetch href="/">
-          <a>Home</a>
+          <span>Home</span>
         </Link>
       </li>
       <ul>
         {links.map(({ key, href, label }) => (
           <li key={key}>
             <Link href={href}>
-              <a>{label}</a>
+              <span>{label}</span>
             </Link>
           </li>
         ))}
