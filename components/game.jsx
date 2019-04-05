@@ -1,5 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import Ping from 'ping.js';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -65,26 +66,42 @@ class Game extends React.Component {
     date.setMilliseconds(0);
     this.date = date;
 
-    this.comments = props.gameData.comments.map((c) => {
-      const urls = [];
+    const urls = [];
+    props.gameData.comments.forEach((c) => {
       let m;
       do {
         m = URL_REGEX.exec(c.body);
         if (m) {
-          urls.push(m[0]);
+          urls.push({ author: c.author, url: m[0] });
         }
       } while (m);
-      return {
-        html: c.body_html,
-        body: c.body,
-        author: c.author,
-        urls,
-      };
+    });
+
+    this.state = {
+      urls,
+    };
+  }
+
+  componentDidMount() {
+    const p = new Ping();
+    const { urls } = this.state;
+    urls.forEach((uo) => {
+      p.ping(uo.url, (err, data) => {
+        let res = data;
+        if (err) {
+          console.log(uo.url);
+          console.error(err);
+          res += ` ${err}`;
+        }
+
+        console.log(res);
+      });
     });
   }
 
   render() {
     const { gameData: { url }, classes } = this.props;
+    const { urls } = this.state;
     const header = `${this.teamOne} vs. ${this.teamTwo}`;
     return (
       <Grid item className={classes.cardContainer}>
@@ -97,9 +114,9 @@ class Game extends React.Component {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <List>
-              {this.comments.map(c => c.urls.filter(isValidUrl).map(u => (
-                <ListItemLink href={u} key={`link-${u}`}>{`${u} (u/${c.author})`}</ListItemLink>
-              )))}
+              {urls.filter(uo => isValidUrl(uo.url)).map(uo => (
+                <ListItemLink href={uo.url} key={`link-${uo.url}`}>{`${uo.url} (u/${uo.author}) (${uo.ping || ''})`}</ListItemLink>
+              ))}
             </List>
           </ExpansionPanelDetails>
         </ExpansionPanel>
