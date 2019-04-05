@@ -1,19 +1,16 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import { AST_ClassExpression } from 'terser';
 
 
 const TITLE_REGEX = /Game Thread: (.*) @ (.*) \((.*)\)/;
-const URL_REGEX = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+const URL_REGEX = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g;
 
 const styles = {
   cardContainer: {
@@ -42,8 +39,7 @@ class Game extends React.Component {
 
     const collect = TITLE_REGEX.exec(props.gameData.title);
 
-    this.teamOne = collect[1];
-    this.teamTwo = collect[2];
+    [, this.teamOne, this.teamTwo] = collect;
 
     const timeParts = collect[3].split(' ');
     const date = new Date();
@@ -56,7 +52,7 @@ class Game extends React.Component {
     date.setMilliseconds(0);
     this.date = date;
 
-    this._comments = props.gameData.comments.map((c) => {
+    this.comments = props.gameData.comments.map((c) => {
       const urls = [];
       let m;
       do {
@@ -75,34 +71,28 @@ class Game extends React.Component {
   }
 
   render() {
-    const { url } = this.props.gameData;
-    const { classes } = this.props;
+    const { gameData: { url }, classes } = this.props;
+    const header = `${this.teamOne} vs. ${this.teamTwo}`;
     return (
       <Grid item className={classes.cardContainer}>
-        <Card className={classes.card}>
-          <CardContent>
+        <ExpansionPanel className={classes.card}>
+          <ExpansionPanelSummary>
             <Link variant="h3" href={url}>
-              {this.teamOne}
-              {' '}
-vs.
-              {' '}
-              {this.teamTwo}
+              {header}
             </Link>
             <Typography variant="h4">{this.date.toLocaleTimeString()}</Typography>
-            {this._comments.map((c, ci) => (
-              <ExpansionPanel key={`author-${ci}`}>
-                <ExpansionPanelSummary>
-                  <Typography className="comment-author">{c.author}</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                  <ul>
-                    {c.urls.map((url, i) => <li key={`link-${i}`}><Typography><Link href={url}>{url}</Link></Typography></li>)}
-                  </ul>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-            ))}
-          </CardContent>
-        </Card>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <ul>
+              {this.comments.map(c => c.urls.map(u => (
+                <li key={`link-${u}`}>
+                  <Link href={u}>{`${u} (u/${c.author})`}</Link>
+                </li>
+              )))}
+            </ul>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+
       </Grid>
     );
   }
