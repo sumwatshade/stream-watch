@@ -4,6 +4,10 @@ import { withStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
@@ -11,6 +15,15 @@ import Grid from '@material-ui/core/Grid';
 
 const TITLE_REGEX = /Game Thread: (.*) @ (.*) \((.*)\)/;
 const URL_REGEX = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g;
+
+function isValidUrl(u) {
+  return !['reddit', 'discord'].some(t => u.includes(t));
+}
+
+function ListItemLink(props) {
+  return <ListItem button component="a" {...props} />;
+}
+
 
 const styles = {
   cardContainer: {
@@ -83,13 +96,11 @@ class Game extends React.Component {
             <Typography variant="h4">{this.date.toLocaleTimeString()}</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <ul>
-              {this.comments.map(c => c.urls.map(u => (
-                <li key={`link-${u}`}>
-                  <Link href={u}>{`${u} (u/${c.author})`}</Link>
-                </li>
+            <List>
+              {this.comments.map(c => c.urls.filter(isValidUrl).map(u => (
+                <ListItemLink href={u} key={`link-${u}`}>{`${u} (u/${c.author})`}</ListItemLink>
               )))}
-            </ul>
+            </List>
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
