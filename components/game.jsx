@@ -90,10 +90,10 @@ class Game extends React.Component {
       <Grid item className={classes.cardContainer}>
         <ExpansionPanel className={classes.card}>
           <ExpansionPanelSummary>
-            <Link variant="h3" href={url}>
-              {header}
-            </Link>
-            <Typography variant="h4">{this.date.toLocaleTimeString()}</Typography>
+            <Grid container direction="row">
+              <Grid item><Link variant="h3" href={url}>{header}</Link></Grid>
+              <Grid item><Typography variant="h4">{this.date.toLocaleTimeString()}</Typography></Grid>
+            </Grid>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <List>
