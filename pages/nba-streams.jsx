@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import Nav from '../components/nav';
+import Head from '../components/head';
 import Game from '../components/game';
 
 import mockRes from '../test/sample';
@@ -17,7 +18,8 @@ const styles = theme => ({
 const Index = (props) => {
   const { classes: { root }, streamData } = props;
   return (
-    <div>
+    <React.Fragment>
+      <Head title="NBA Games" />
       <Nav />
       <Grid container direction="column" justify="center" alignItems="center" spacing={8} className={root}>
         <Grid item>
@@ -27,7 +29,7 @@ const Index = (props) => {
           <Game key={`game-${o.title}`} gameData={o} />
         )))}
       </Grid>
-    </div>
+    </React.Fragment>
 
   );
 };
