@@ -1,18 +1,27 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
+
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import { AST_ClassExpression } from "terser";
+
 
 const TITLE_REGEX = /Game Thread: (.*) @ (.*) \((.*)\)/;
 const URL_REGEX = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
 
 const styles = {
-    card: {
+    cardContainer: {
       minWidth: '85%',
       maxWidth: '85%',
-      
+    },
+    card: {
+        backgroundColor: "#ffffff"
     },
     bullet: {
       display: 'inline-block',
@@ -70,30 +79,30 @@ class Game extends React.Component {
         const {url} = this.props.gameData;
         const {classes} = this.props;
         return (
-            <Card className={classes.card}>
-                <CardContent>
-                    <Typography>
-                        <Link href={url}>{this.teamOne} vs. {this.teamTwo}</Link>
-                    </Typography>
-                    <Typography>
-                        {this.date.toLocaleTimeString()}
-                    </Typography>
-                    <ul>
-                        {this._comments.map(c => {
+            <Grid item className={classes.cardContainer}>
+                <Card className={classes.card}>
+                    <CardContent>
+                        <Link variant="h3" href={url}>{this.teamOne} vs. {this.teamTwo}</Link>
+                        <Typography variant="h4">{this.date.toLocaleTimeString()}</Typography>
+                        {this._comments.map((c, ci) => {
                             return (
-                                <li className="comment">
-                                    <Typography className="comment-author">{c.author}</Typography>
+                                <ExpansionPanel key={`author-${ci}`}>
+                                    <ExpansionPanelSummary>
+                                        <Typography className="comment-author">{c.author}</Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails>
                                     <ul>
-                                        {c.urls.map(url => {
-                                            return <li><Typography><Link href={url}>{url}</Link></Typography></li>
+                                        {c.urls.map((url, i) => {
+                                            return <li key={`link-${i}`}><Typography><Link href={url}>{url}</Link></Typography></li>
                                         })}
                                     </ul>
-                                </li>
+                                    </ExpansionPanelDetails>
+                                </ExpansionPanel>
                             )
                         })}
-                    </ul>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            </Grid>
         )
     }
 }

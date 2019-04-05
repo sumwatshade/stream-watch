@@ -3,19 +3,30 @@ import Game from '../components/game';
 
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
 
 import mockRes from "../test/sample";
 import mockPosts from "../test/posts";
 
-const Index = (props) => (
-  <Grid container direction="column" justify="center" alignItems="center" spacing="20px">
-    <Typography variant="h1">NBA Games</Typography>
+const styles = theme => {
+  return {
+    root: {
+      backgroundColor: theme.palette.background
+    }
+  }
+}
+const Index = (props) => {
+  return (
+  <Grid container direction="column" justify="center" alignItems="center" spacing={8} className={props.classes.root}>
+    <Grid item>
+      <Typography variant="h1">NBA Games</Typography>
+    </Grid>
         {props.streamData.map((o, i) => {
       return o.title.indexOf("Game Thread") < 0 ? null : (
-        <Game key={`game-${i}`} gameData={o} />
+          <Game key={`game-${i}`} gameData={o} />
     )})}
   </Grid>
-)
+)}
 
 Index.getInitialProps = async function() {
   //const res = await fetch('https://www.reddit.com/r/nbastreams.json')
@@ -43,4 +54,4 @@ Index.getInitialProps = async function() {
   }
 }
 
-export default Index
+export default withStyles(styles)(Index)
