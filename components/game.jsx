@@ -116,7 +116,7 @@ class Game extends React.Component {
           <ExpansionPanelDetails>
             <List>
               {urls.filter(uo => isValidUrl(uo.url)).map(uo => (
-                <ListItemLink href={uo.url} key={`link-${uo.url}`}>{`${uo.url} (u/${uo.author}) (${uo.ping || ''})`}</ListItemLink>
+                <ListItemLink href={uo.url} key={`link-${uo.url}`}>{`${uo.url} (u/${uo.author})`}</ListItemLink>
               ))}
             </List>
           </ExpansionPanelDetails>
