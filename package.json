@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^3.9.3",
+    "aws-serverless-express": "^3.3.6",
     "isomorphic-unfetch": "^3.0.0",
     "next": "^8.0.4",
     "ping.js": "^0.2.2",

@@ -1,10 +1,12 @@
 module.exports = {
+  target: 'serverless',
   webpack: (config) => {
+    const resConfig = Object.assign({}, config);
     // Fixes npm packages that depend on `fs` module
-    config.node = {
+    resConfig.node = {
       fs: 'empty',
     };
 
-    return config;
+    return resConfig;
   },
 };

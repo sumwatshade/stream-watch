@@ -1073,6 +1073,14 @@ autodll-webpack-plugin@0.4.2:
     webpack-merge "^4.1.0"
     webpack-sources "^1.0.1"
 
+aws-serverless-express@^3.3.6:
+  version "3.3.6"
+  resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/aws-serverless-express/-/aws-serverless-express-3.3.6.tgz#5fb35c23af3d6e18a6bebdb4397d20dfdcc0a828"
+  integrity sha1-X7NcI689bhimvr20OX0g39zAqCg=
+  dependencies:
+    binary-case "^1.0.0"
+    type-is "^1.6.16"
+
 axobject-query@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/axobject-query/-/axobject-query-2.0.2.tgz#ea187abe5b9002b377f925d8bf7d1c561adf38f9"
@@ -1153,6 +1161,11 @@ big.js@^3.1.3:
 big.js@^5.2.2:
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-5.2.2.tgz#65f0af382f578bcdc742bd9c281e9cb2d7768328"
+
+binary-case@^1.0.0:
+  version "1.1.4"
+  resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/binary-case/-/binary-case-1.1.4.tgz#d687104d59e38f2b9e658d3a58936963c59ab931"
+  integrity sha1-1ocQTVnjjyueZY06WJNpY8WauTE=
 
 binary-extensions@^1.0.0:
   version "1.13.1"
@@ -3185,6 +3198,11 @@ md5.js@^1.3.4:
     inherits "^2.0.1"
     safe-buffer "^5.1.2"
 
+media-typer@0.3.0:
+  version "0.3.0"
+  resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
+  integrity sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=
+
 memory-fs@^0.4.0, memory-fs@^0.4.1, memory-fs@~0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/memory-fs/-/memory-fs-0.4.1.tgz#3a9a20b8462523e447cfbc7e8bb80ed667bfc552"
@@ -3216,6 +3234,18 @@ miller-rabin@^4.0.0:
   dependencies:
     bn.js "^4.0.0"
     brorand "^1.0.1"
+
+mime-db@~1.38.0:
+  version "1.38.0"
+  resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/mime-db/-/mime-db-1.38.0.tgz#1a2aab16da9eb167b49c6e4df2d9c68d63d8e2ad"
+  integrity sha1-GiqrFtqesWe0nG5N8tnGjWPY4q0=
+
+mime-types@~2.1.18:
+  version "2.1.22"
+  resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/mime-types/-/mime-types-2.1.22.tgz#fe6b355a190926ab7698c9a0556a11199b2199bd"
+  integrity sha1-/ms1WhkJJqt2mMmgVWoRGZshmb0=
+  dependencies:
+    mime-db "~1.38.0"
 
 mime@1.4.1:
   version "1.4.1"
@@ -4843,6 +4873,14 @@ type-check@~0.3.2:
   resolved "https://registry.yarnpkg.com/type-check/-/type-check-0.3.2.tgz#5884cab512cf1d355e3fb784f30804b2b520db72"
   dependencies:
     prelude-ls "~1.1.2"
+
+type-is@^1.6.16:
+  version "1.6.16"
+  resolved "https://registry.npmjs.intuit.com:443/artifactory/api/npm/npm-intuit/type-is/-/type-is-1.6.16.tgz#f89ce341541c672b25ee7ae3c73dee3b2be50194"
+  integrity sha1-+JzjQVQcZysl7nrjxz3uOyvlAZQ=
+  dependencies:
+    media-typer "0.3.0"
+    mime-types "~2.1.18"
 
 typedarray@^0.0.6:
   version "0.0.6"

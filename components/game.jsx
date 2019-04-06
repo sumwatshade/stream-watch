@@ -1,6 +1,5 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Ping from 'ping.js';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -66,8 +65,21 @@ class Game extends React.Component {
     date.setMilliseconds(0);
     this.date = date;
 
-    const urls = [];
-    props.gameData.comments.forEach((c) => {
+    this.state = {
+      urls: [],
+    };
+  }
+
+  async componentDidMount() {
+    const { gameData: { permalink } } = this.props;
+    const fetchUrl = `https://www.reddit.com${permalink.substring(0, permalink.length - 1)}.json`;
+
+    const commentsFetch = await fetch(fetchUrl);
+    const commentsJson = await commentsFetch.json();
+
+    let urls = [];
+    commentsJson[1].data.children.forEach((cd) => {
+      const c = cd.data;
       let m;
       do {
         m = URL_REGEX.exec(c.body);
@@ -77,25 +89,12 @@ class Game extends React.Component {
       } while (m);
     });
 
-    this.state = {
+    urls = urls.filter((thing, index, self) => index === self.findIndex(t => (
+      t.url === thing.url
+    )));
+
+    this.setState({
       urls,
-    };
-  }
-
-  componentDidMount() {
-    const p = new Ping();
-    const { urls } = this.state;
-    urls.forEach((uo) => {
-      p.ping(uo.url, (err, data) => {
-        let res = data;
-        if (err) {
-          console.log(uo.url);
-          console.error(err);
-          res += ` ${err}`;
-        }
-
-        console.log(res);
-      });
     });
   }
 
