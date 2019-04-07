@@ -13,6 +13,7 @@ const styles = theme => ({
   root: {
     backgroundColor: theme.palette.background,
     minHeight: '100vh',
+    maxWidth: '100%',
   },
 });
 const Index = (props) => {
@@ -38,7 +39,7 @@ const Index = (props) => {
         className={root}
       >
         <Grid item>
-          <Typography variant="h1">NBA Games</Typography>
+          <Typography variant="h1" color="primary">NBA Games</Typography>
         </Grid>
         {Games}
         <Grid item>

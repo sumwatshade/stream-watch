@@ -11,6 +11,7 @@ import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 
 const TITLE_REGEX = /Game Thread: (.*) (?:@|at|vs|vs\.) (.*) \((.*)\)/;
@@ -25,13 +26,13 @@ function ListItemLink(props) {
 }
 
 
-const styles = {
-  cardContainer: {
-    minWidth: '85%',
-    maxWidth: '85%',
+const styles = theme => ({
+  container: {
+    width: '100%',
   },
   card: {
     backgroundColor: '#ffffff',
+    minWidth: '100%',
   },
   bullet: {
     display: 'inline-block',
@@ -44,7 +45,28 @@ const styles = {
   pos: {
     marginBottom: 12,
   },
-};
+  heading: {
+    color: theme.palette.primary.main,
+    flexGrow: 1,
+  },
+  secondaryHeading: {
+    alignSelf: 'center',
+    color: theme.palette.text.secondary,
+    flexBasis: '30%',
+    flexShrink: 0,
+    [theme.breakpoints.down('xs')]: {
+      alignSelf: 'flex-start',
+    },
+  },
+  collapsed: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+    },
+  },
+});
 
 class Game extends React.Component {
   constructor(props) {
@@ -105,15 +127,22 @@ class Game extends React.Component {
     const {
       urls, teamOne, teamTwo, date,
     } = this.state;
-    const header = `${teamOne} vs. ${teamTwo}`;
-    return (
-      <Grid item className={classes.cardContainer}>
+    const header = (
+      <React.Fragment>
+        <Typography variant="span">{teamOne}</Typography>
+        <Typography variant="span">{teamTwo}</Typography>
+      </React.Fragment>
+    );
+
+
+    return urls.length === 0 ? null : (
+      <Grid item className={classes.container}>
         <ExpansionPanel className={classes.card}>
-          <ExpansionPanelSummary>
-            <Grid container direction="row">
-              <Grid item><Link variant="h3" href={url}>{header}</Link></Grid>
-              <Grid item><Typography variant="h4">{date.toLocaleTimeString()}</Typography></Grid>
-            </Grid>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography className={classes.collapsed}>
+              <Link variant="h4" className={classes.heading} href={url}>{header}</Link>
+              <Typography variant="h5" className={classes.secondaryHeading}>{date.toLocaleTimeString()}</Typography>
+            </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <List>
