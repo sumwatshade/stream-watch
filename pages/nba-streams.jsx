@@ -16,7 +16,8 @@ const styles = theme => ({
   },
 });
 const Index = (props) => {
-  const { classes: { root }, streamData } = props;
+  const { classes: { root }, streamData, lastUpdated } = props;
+  const updatedTimeString = new Date(lastUpdated).toLocaleTimeString();
   const games = streamData.filter(o => (o.title.indexOf('Game Thread') >= 0));
 
   const Games = games.length > 0 ? games.map(o => (
@@ -29,14 +30,24 @@ const Index = (props) => {
   return (
     <React.Fragment>
       <Head title="NBA Games" />
-      <Grid container direction="column" alignItems="center" spacing={8} className={root}>
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        spacing={8}
+        className={root}
+      >
         <Grid item>
           <Typography variant="h1">NBA Games</Typography>
         </Grid>
         {Games}
+        <Grid item>
+          <Typography variant="h5">
+            {`Last updated: ${updatedTimeString}`}
+          </Typography>
+        </Grid>
       </Grid>
     </React.Fragment>
-
   );
 };
 
@@ -46,19 +57,25 @@ Index.getInitialProps = async function getInit() {
     res = await fetch(
       'https://s3.amazonaws.com/nba-streams-bucket/posts.json',
     );
-    // const res = mockRes;
   } catch (e) {
-    // console.error(e);
-    // res = mockRes;
+    console.error(e);
   }
 
-  const posts = await res.json();
-
+  const jsonRes = await res.json();
+  let data;
+  if (jsonRes && jsonRes.length) {
+    data = {
+      streamData: jsonRes,
+    };
+  } else {
+    data = {
+      streamData: jsonRes.posts,
+      lastUpdated: jsonRes.lastUpdated,
+    };
+  }
 
   // For each game, find a comment made by the bot that posts stream data
-  return {
-    streamData: posts,
-  };
+  return data;
 };
 
 export default withStyles(styles)(Index);
