@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -106,7 +105,6 @@ class Game extends React.Component {
     return (
       <Grid item className={classes.cardContainer}>
         <ExpansionPanel className={classes.card}>
-          <ExpansionPanelActions />
           <ExpansionPanelSummary>
             <Grid container direction="row">
               <Grid item><Link variant="h3" href={url}>{header}</Link></Grid>

@@ -43,31 +43,21 @@ const Index = (props) => {
 Index.getInitialProps = async function getInit() {
   let res;
   try {
-    res = await fetch('https://www.reddit.com/r/nbastreams.json');
+    res = await fetch(
+      'https://s3.amazonaws.com/nba-streams-bucket/posts.json',
+    );
     // const res = mockRes;
   } catch (e) {
     // console.error(e);
     // res = mockRes;
   }
 
-  const jsonResponse = await res.json();
-  const posts = jsonResponse.data.children.map((c) => {
-    const {
-      title, author, url, permalink,
-    } = c.data;
-    return {
-      title,
-      author,
-      url,
-      permalink,
-    };
-  });
+  const posts = await res.json();
 
 
   // For each game, find a comment made by the bot that posts stream data
   return {
     streamData: posts,
-    raw: jsonResponse,
   };
 };
 
