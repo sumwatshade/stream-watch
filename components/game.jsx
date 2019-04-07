@@ -13,7 +13,7 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 
 
-const TITLE_REGEX = /Game Thread: (.*) @ (.*) \((.*)\)/;
+const TITLE_REGEX = /Game Thread: (.*) (?:@|at|vs|vs\.) (.*) \((.*)\)/;
 const URL_REGEX = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g;
 
 function isValidUrl(u) {
@@ -51,8 +51,7 @@ class Game extends React.Component {
     super(props);
 
     const collect = TITLE_REGEX.exec(props.gameData.title);
-
-    [, this.teamOne, this.teamTwo] = collect;
+    const [, teamOne, teamTwo] = collect;
 
     const timeParts = collect[3].split(' ');
     const date = new Date();
@@ -63,15 +62,18 @@ class Game extends React.Component {
     date.setMinutes(minutes);
     date.setSeconds(0);
     date.setMilliseconds(0);
-    this.date = date;
 
     this.state = {
       urls: [],
+      teamOne,
+      teamTwo,
+      date,
     };
   }
 
   async componentDidMount() {
     const { gameData: { permalink } } = this.props;
+
     const fetchUrl = `https://www.reddit.com${permalink.substring(0, permalink.length - 1)}.json`;
 
     const commentsFetch = await fetch(fetchUrl);
@@ -100,15 +102,17 @@ class Game extends React.Component {
 
   render() {
     const { gameData: { url }, classes } = this.props;
-    const { urls } = this.state;
-    const header = `${this.teamOne} vs. ${this.teamTwo}`;
+    const {
+      urls, teamOne, teamTwo, date,
+    } = this.state;
+    const header = `${teamOne} vs. ${teamTwo}`;
     return (
       <Grid item className={classes.cardContainer}>
         <ExpansionPanel className={classes.card}>
           <ExpansionPanelSummary>
             <Grid container direction="row">
               <Grid item><Link variant="h3" href={url}>{header}</Link></Grid>
-              <Grid item><Typography variant="h4">{this.date.toLocaleTimeString()}</Typography></Grid>
+              <Grid item><Typography variant="h4">{date.toLocaleTimeString()}</Typography></Grid>
             </Grid>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
