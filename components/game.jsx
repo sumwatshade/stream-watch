@@ -14,7 +14,7 @@ import Grid from '@material-ui/core/Grid';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 
-const TITLE_REGEX = /Game Thread: (.*) (?:@|at|vs|vs\.) (.*) \((.*)\)/;
+const TITLE_REGEX = /Game Thread: (.*) (?:@|at|vs|vs\.)+ (.*) \(*(\d+:\d+ \w+ \w+)\)*/;
 const URL_REGEX = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g;
 
 function isValidUrl(u) {
@@ -71,7 +71,6 @@ const styles = theme => ({
 class Game extends React.Component {
   constructor(props) {
     super(props);
-
     const collect = TITLE_REGEX.exec(props.gameData.title);
     const [, teamOne, teamTwo] = collect;
 
@@ -80,7 +79,8 @@ class Game extends React.Component {
     const [hours, minutes] = timeParts[0].split(':');
 
 
-    date.setHours(hours - 3);
+    const modifier = timeParts[1] === 'PM' ? 12 : 0;
+    date.setHours(hours - modifier);
     date.setMinutes(minutes);
     date.setSeconds(0);
     date.setMilliseconds(0);
