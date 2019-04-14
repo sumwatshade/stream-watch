@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 
@@ -66,6 +67,13 @@ const styles = theme => ({
       flexDirection: 'column',
     },
   },
+  urlList: {
+    width: '100%',
+    wordBreak: 'break-all',
+  },
+  progress: {
+    margin: 'auto',
+  },
 });
 
 class Game extends React.Component {
@@ -90,6 +98,7 @@ class Game extends React.Component {
       teamOne,
       teamTwo,
       date,
+      loading: true,
     };
   }
 
@@ -119,6 +128,7 @@ class Game extends React.Component {
 
     this.setState({
       urls,
+      loading: false,
     });
   }
 
@@ -133,7 +143,7 @@ class Game extends React.Component {
   render() {
     const { gameData: { url }, classes } = this.props;
     const {
-      urls, teamOne, teamTwo, date, error,
+      urls, teamOne, teamTwo, date, error, loading,
     } = this.state;
     const header = (
       <React.Fragment>
@@ -153,6 +163,16 @@ class Game extends React.Component {
       </Typography>
     );
 
+    const Listing = loading ? (
+      <CircularProgress className={classes.progress} />
+    ) : (
+      <List className={classes.urlList}>
+        {urls.filter(uo => isValidUrl(uo.url)).map(uo => (
+          <ListItemLink href={uo.url} key={`link-${uo.url}`}>{`${uo.url} (u/${uo.author})`}</ListItemLink>
+        ))}
+      </List>
+    );
+
     return (
       <Grid item className={classes.container}>
         <ExpansionPanel className={classes.card}>
@@ -160,11 +180,7 @@ class Game extends React.Component {
             {Summary}
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <List>
-              {urls.filter(uo => isValidUrl(uo.url)).map(uo => (
-                <ListItemLink href={uo.url} key={`link-${uo.url}`}>{`${uo.url} (u/${uo.author})`}</ListItemLink>
-              ))}
-            </List>
+            {Listing}
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
