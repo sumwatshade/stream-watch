@@ -3,11 +3,9 @@ import fetch from 'isomorphic-unfetch';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
+import * as Sentry from '@sentry/browser';
 import Head from '../components/head';
 import Game from '../components/game';
-
-// import mockRes from '../test/sample';
-// import mockPosts from '../test/posts';
 
 const styles = theme => ({
   root: {
@@ -17,6 +15,9 @@ const styles = theme => ({
   },
 });
 const Index = (props) => {
+  Sentry.init({
+    dsn: 'https://6e10d798246e469da98a106697f71a41@sentry.io/1438266',
+  });
   const { classes: { root }, streamData, lastUpdated } = props;
   const updatedTimeString = new Date(lastUpdated).toLocaleTimeString();
   const games = streamData.filter(o => (o.title.indexOf('Game Thread') >= 0));
@@ -60,6 +61,7 @@ Index.getInitialProps = async function getInit() {
     );
   } catch (e) {
     console.error(e);
+    Sentry.captureException(e);
   }
 
   const jsonRes = await res.json();

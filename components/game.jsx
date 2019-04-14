@@ -1,10 +1,10 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import * as Sentry from '@sentry/browser';
 
+import { withStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 
@@ -122,27 +122,42 @@ class Game extends React.Component {
     });
   }
 
+  componentDidCatch(error, errorInfo) {
+    this.setState({ error });
+    Sentry.withScope((scope) => {
+      scope.setExtras(errorInfo);
+      Sentry.captureException(error);
+    });
+  }
+
   render() {
     const { gameData: { url }, classes } = this.props;
     const {
-      urls, teamOne, teamTwo, date,
+      urls, teamOne, teamTwo, date, error,
     } = this.state;
     const header = (
       <React.Fragment>
-        <Typography variant="span">{teamOne}</Typography>
-        <Typography variant="span">{teamTwo}</Typography>
+        <Typography variant="subtitle">{teamOne}</Typography>
+        <Typography variant="subtitle">{teamTwo}</Typography>
       </React.Fragment>
     );
 
+    const Summary = error ? (
+      <Typography className={classes.collapsed}>
+        <Typography variant="h5" className={classes.heading}>An Error occured retrieving this game...</Typography>
+      </Typography>
+    ) : (
+      <Typography className={classes.collapsed}>
+        <Link variant="h4" className={classes.heading} href={url}>{header}</Link>
+        <Typography variant="h5" className={classes.secondaryHeading}>{date.toLocaleTimeString()}</Typography>
+      </Typography>
+    );
 
-    return urls.length === 0 ? null : (
+    return (
       <Grid item className={classes.container}>
         <ExpansionPanel className={classes.card}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.collapsed}>
-              <Link variant="h4" className={classes.heading} href={url}>{header}</Link>
-              <Typography variant="h5" className={classes.secondaryHeading}>{date.toLocaleTimeString()}</Typography>
-            </Typography>
+            {Summary}
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <List>
