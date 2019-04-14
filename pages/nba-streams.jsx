@@ -1,6 +1,7 @@
 import React from 'react';
 import fetch from 'isomorphic-unfetch';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import * as Sentry from '@sentry/browser';
@@ -14,10 +15,28 @@ const styles = theme => ({
     maxWidth: '100%',
   },
 });
+
+function showReportDialog() {
+  const error = new Error('User Feedback Submitted');
+  Sentry.captureException(error);
+  Sentry.showReportDialog({
+    title: 'Submit feedback to the Stream Friendly Team!',
+    labelComments: 'Feature requests, known issues, etc.',
+  });
+}
+
 const Index = (props) => {
   Sentry.init({
     dsn: 'https://6e10d798246e469da98a106697f71a41@sentry.io/1438266',
+    beforeSend(event) {
+      // Check if it is an exception, and if so, show the report dialog
+      if (event.exception) {
+        Sentry.showReportDialog({ eventId: event.event_id });
+      }
+      return event;
+    },
   });
+
   const { classes: { root }, streamData, lastUpdated } = props;
   const updatedTimeString = new Date(lastUpdated).toLocaleTimeString();
   const games = streamData.filter(o => (o.title.indexOf('Game Thread') >= 0));
@@ -47,6 +66,11 @@ const Index = (props) => {
           <Typography variant="h5">
             {`Last updated: ${updatedTimeString}`}
           </Typography>
+        </Grid>
+        <Grid item>
+          <Button component="span" onClick={showReportDialog}>
+            {'Give feedback'}
+          </Button>
         </Grid>
       </Grid>
     </React.Fragment>

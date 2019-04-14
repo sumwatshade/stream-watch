@@ -145,12 +145,6 @@ class Game extends React.Component {
     const {
       urls, teamOne, teamTwo, date, error, loading,
     } = this.state;
-    const header = (
-      <React.Fragment>
-        <Typography variant="subtitle">{teamOne}</Typography>
-        <Typography variant="subtitle">{teamTwo}</Typography>
-      </React.Fragment>
-    );
 
     const Summary = error ? (
       <Typography className={classes.collapsed}>
@@ -158,7 +152,10 @@ class Game extends React.Component {
       </Typography>
     ) : (
       <Typography className={classes.collapsed}>
-        <Link variant="h4" className={classes.heading} href={url}>{header}</Link>
+        <Link variant="h4" className={classes.heading} href={url}>
+          <Typography variant="h4">{teamOne}</Typography>
+          <Typography variant="h4">{teamTwo}</Typography>
+        </Link>
         <Typography variant="h5" className={classes.secondaryHeading}>{date.toLocaleTimeString()}</Typography>
       </Typography>
     );
