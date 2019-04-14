@@ -28,13 +28,6 @@ function showReportDialog() {
 const Index = (props) => {
   Sentry.init({
     dsn: 'https://6e10d798246e469da98a106697f71a41@sentry.io/1438266',
-    beforeSend(event) {
-      // Check if it is an exception, and if so, show the report dialog
-      if (event.exception) {
-        Sentry.showReportDialog({ eventId: event.event_id });
-      }
-      return event;
-    },
   });
 
   const { classes: { root }, streamData, lastUpdated } = props;
