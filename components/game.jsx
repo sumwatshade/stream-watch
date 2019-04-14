@@ -84,7 +84,7 @@ class Game extends React.Component {
 
 
     const modifier = timeParts[1] === 'PM' ? 12 : 0;
-    date.setHours(hours - modifier);
+    date.setUTCHours(hours - modifier + 4);
     date.setMinutes(minutes);
     date.setSeconds(0);
     date.setMilliseconds(0);
@@ -174,7 +174,6 @@ class Game extends React.Component {
             {Listing}
           </ExpansionPanelDetails>
         </ExpansionPanel>
-
       </Grid>
     );
   }
