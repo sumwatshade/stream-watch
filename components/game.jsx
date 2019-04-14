@@ -7,12 +7,12 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import StreamLink from './StreamLink';
 
 
 const TITLE_REGEX = /Game Thread: (.*) (?:@|at|vs|vs\.)+ (.*) \(*(\d+:\d+ \w+ \w+)\)*/;
@@ -20,10 +20,6 @@ const URL_REGEX = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b
 
 function isValidUrl(u) {
   return !['reddit', 'discord'].some(t => u.includes(t));
-}
-
-function ListItemLink(props) {
-  return <ListItem button component="a" {...props} />;
 }
 
 
@@ -164,9 +160,7 @@ class Game extends React.Component {
       <CircularProgress className={classes.progress} />
     ) : (
       <List className={classes.urlList}>
-        {urls.filter(uo => isValidUrl(uo.url)).map(uo => (
-          <ListItemLink href={uo.url} key={`link-${uo.url}`}>{`${uo.url} (u/${uo.author})`}</ListItemLink>
-        ))}
+        {urls.filter(uo => isValidUrl(uo.url)).map(StreamLink)}
       </List>
     );
 
