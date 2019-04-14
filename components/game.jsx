@@ -160,7 +160,7 @@ class Game extends React.Component {
       <CircularProgress className={classes.progress} />
     ) : (
       <List className={classes.urlList}>
-        {urls.filter(uo => isValidUrl(uo.url)).map(StreamLink)}
+        {urls.filter(uo => isValidUrl(uo.url)).map(uo => <StreamLink {...uo} />)}
       </List>
     );
 
