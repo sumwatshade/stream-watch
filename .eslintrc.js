@@ -19,6 +19,9 @@ module.exports = {
     'react',
   ],
   rules: {
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "no-console": ["error", {
+      allow: ["info", "error"]
+    }]
   },
 };

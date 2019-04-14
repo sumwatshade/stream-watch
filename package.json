@@ -3,11 +3,13 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
+    "deploy": "next build && node ./scripts/deploy.js",
     "start": "next start"
   },
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
+    "aws-sdk": "^2.437.0",
     "aws-serverless-express": "^3.3.6",
     "isomorphic-unfetch": "^3.0.0",
     "next": "^8.0.4",
