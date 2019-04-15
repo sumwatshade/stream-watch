@@ -5,15 +5,19 @@ import { withStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+
 
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import StreamLink from './StreamLink';
-
+import whitelist from '../static/whitelist';
 
 const TITLE_REGEX = /Game Thread: (.*) (?:@|at|vs|vs\.)+ (.*) \(*(\d+:\d+ \w+ \w+)\)*/;
 const URL_REGEX = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g;
@@ -70,6 +74,12 @@ const styles = theme => ({
   progress: {
     margin: 'auto',
   },
+  panelDetails: {
+    flexDirection: 'column',
+  },
+  whiteListSwitch: {
+    alignSelf: 'flex-end',
+  },
 });
 
 class Game extends React.Component {
@@ -95,6 +105,7 @@ class Game extends React.Component {
       teamTwo,
       date,
       loading: true,
+      useWhiteList: true,
     };
   }
 
@@ -118,9 +129,9 @@ class Game extends React.Component {
       } while (m);
     });
 
-    urls = urls.filter((thing, index, self) => index === self.findIndex(t => (
-      t.url === thing.url
-    )));
+    urls = urls.filter(
+      (thing, index, self) => index === self.findIndex(t => (t.url === thing.url)),
+    );
 
     this.setState({
       urls,
@@ -139,9 +150,12 @@ class Game extends React.Component {
   render() {
     const { gameData: { url }, classes } = this.props;
     const {
-      urls, teamOne, teamTwo, date, error, loading,
+      urls, teamOne, teamTwo, date, error, loading, useWhiteList,
     } = this.state;
 
+    const filteredUrls = useWhiteList ? urls.filter(
+      u => whitelist.some(h => u.url.indexOf(h) >= 0),
+    ) : urls;
     const Summary = error ? (
       <Typography className={classes.collapsed}>
         <Typography variant="h5" className={classes.heading}>An Error occured retrieving this game...</Typography>
@@ -160,7 +174,12 @@ class Game extends React.Component {
       <CircularProgress className={classes.progress} />
     ) : (
       <List className={classes.urlList}>
-        {urls.filter(uo => isValidUrl(uo.url)).map(uo => <StreamLink {...uo} />)}
+        {filteredUrls.filter(uo => isValidUrl(uo.url)).map((uo, ind) => (
+          <React.Fragment>
+            <StreamLink {...uo} />
+            {ind + 1 < filteredUrls.length && <Divider />}
+          </React.Fragment>
+        ))}
       </List>
     );
 
@@ -170,7 +189,19 @@ class Game extends React.Component {
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             {Summary}
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
+          <ExpansionPanelDetails className={classes.panelDetails}>
+            <FormControlLabel
+              className={classes.whiteListSwitch}
+              labelPlacement="start"
+              control={(
+                <Switch
+                  checked={useWhiteList}
+                  onChange={(e) => { this.setState({ useWhiteList: !!e.target.checked }); }}
+                  value="checkedA"
+                />
+              )}
+              label={useWhiteList ? 'Reduced Listing' : 'All Streams'}
+            />
             {Listing}
           </ExpansionPanelDetails>
         </ExpansionPanel>

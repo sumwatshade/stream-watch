@@ -5,7 +5,7 @@ import { string } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import { Typography } from '@material-ui/core';
-import Divider from '@material-ui/core/Divider';
+
 
 const styles = theme => ({
   link: {
@@ -36,16 +36,37 @@ function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
 }
 
-const StreamLink = ({ url, author, classes }) => {
+function parseUrl(url) {
   const { host, pathname } = parse(url);
+  let res = `${host}${pathname}`;
+
+  switch (host) {
+    case 'bfst.to':
+      res = `Buff Streams (${pathname})`;
+      break;
+    case 'ripple.is':
+      res = `Ripple Streams (${pathname})`;
+      break;
+    case 'acesports.xyz':
+      res = `Ace Sports (${pathname})`;
+      break;
+    case 'nba-live.stream':
+      res = `Nba Live Streams (${pathname})`;
+      break;
+    default:
+      break;
+  }
+
+  return res;
+}
+const StreamLink = ({ url, author, classes }) => {
+  const urlContent = parseUrl(url);
+
   return (
-    <React.Fragment>
-      <ListItemLink className={classes.link} href={url} key={`link-${pathname}`}>
-        <Typography className={classes.url}>{`${host}${pathname}`}</Typography>
-        <Typography className={classes.author}>{`u/${author}`}</Typography>
-      </ListItemLink>
-      <Divider />
-    </React.Fragment>
+    <ListItemLink className={classes.link} href={url} target="_blank" key={`link-${url}`}>
+      <Typography className={classes.url}>{urlContent}</Typography>
+      <Typography className={classes.author}>{`u/${author}`}</Typography>
+    </ListItemLink>
   );
 };
 
