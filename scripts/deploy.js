@@ -2,12 +2,38 @@ const AWS = require('aws-sdk');
 const path = require('path');
 const fs = require('fs');
 
-function uploadDir(s3Path, bucketName) {
-  const s3 = new AWS.S3({
-    accessKeyId: process.env.PERSONAL_AWS_ACCESS_KEY,
-    secretAccessKey: process.env.PERSONAL_AWS_SECRET_ACCESS_KEY,
-  });
+const s3 = new AWS.S3({
+  accessKeyId: process.env.PERSONAL_AWS_ACCESS_KEY,
+  secretAccessKey: process.env.PERSONAL_AWS_SECRET_ACCESS_KEY,
+});
 
+function emptyBucket(bucketName, callback) {
+  let params = {
+    Bucket: bucketName,
+    Prefix: '.next/',
+  };
+
+  s3.listObjects(params, (err, data) => {
+    if (err) return callback(err);
+
+    if (data.Contents.length === 0) return callback();
+
+    params = { Bucket: bucketName };
+    params.Delete = { Objects: [] };
+
+    data.Contents.forEach((content) => {
+      params.Delete.Objects.push({ Key: content.Key });
+    });
+
+    return s3.deleteObjects(params, (err2, data2) => {
+      if (err2) return callback(err2);
+      if (data2.Contents.length === 1000) return emptyBucket(bucketName, callback);
+      return callback();
+    });
+  });
+}
+
+function uploadDir(s3Path, bucketName) {
   function walkSync(currentDirPath, cb) {
     fs.readdirSync(currentDirPath).forEach((name) => {
       const filePath = path.join(currentDirPath, name);
@@ -41,4 +67,9 @@ function uploadDir(s3Path, bucketName) {
 
 
 const nextBuildPath = path.join(process.cwd(), '.next');
-uploadDir(nextBuildPath, 'nba-streams-bucket');
+emptyBucket('nba-streams-bucket', (err) => {
+  if (err) {
+    return err;
+  }
+  return uploadDir(nextBuildPath, 'nba-streams-bucket');
+});
