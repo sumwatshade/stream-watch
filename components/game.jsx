@@ -16,6 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import NewWindowIcon from '@material-ui/icons/OpenInNew';
 import StreamLink from './StreamLink';
 import whitelist from '../static/whitelist';
 
@@ -40,6 +41,16 @@ const styles = theme => ({
     margin: '0 2px',
     transform: 'scale(0.8)',
   },
+  headingContainer: {
+    flexDirection: 'row',
+    flexGrow: 1,
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      alignSelf: 'flex-start',
+    },
+  },
   title: {
     fontSize: 14,
   },
@@ -48,13 +59,18 @@ const styles = theme => ({
   },
   heading: {
     color: theme.palette.primary.main,
+    minWidth: '40%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  redditLink: {
     flexGrow: 1,
   },
   secondaryHeading: {
-    alignSelf: 'center',
     color: theme.palette.text.secondary,
     flexBasis: '30%',
     flexShrink: 0,
+    alignSelf: 'center',
     [theme.breakpoints.down('xs')]: {
       alignSelf: 'flex-start',
     },
@@ -62,6 +78,7 @@ const styles = theme => ({
   collapsed: {
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
     width: '100%',
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
@@ -161,13 +178,24 @@ class Game extends React.Component {
         <Typography variant="h5" className={classes.heading}>An Error occured retrieving this game...</Typography>
       </Typography>
     ) : (
-      <Typography className={classes.collapsed}>
-        <Link variant="h4" className={classes.heading} href={url}>
-          <Typography variant="h4">{teamOne}</Typography>
-          <Typography variant="h4">{teamTwo}</Typography>
-        </Link>
+
+      <div className={classes.collapsed}>
+        <div className={classes.headingContainer}>
+
+          <div className={classes.heading} href={url}>
+            <Typography variant="h4">{teamOne}</Typography>
+            <Typography variant="h4">{teamTwo}</Typography>
+          </div>
+          <div className={classes.redditLink} href={url}>
+            <Link href={url} target="_blank" variant="subtitle1">
+              {'reddit'}
+              <NewWindowIcon fontSize="inherit" />
+            </Link>
+          </div>
+        </div>
+
         <Typography variant="h5" className={classes.secondaryHeading}>{date.toLocaleTimeString()}</Typography>
-      </Typography>
+      </div>
     );
 
     const Listing = loading ? (
