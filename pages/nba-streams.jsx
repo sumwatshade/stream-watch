@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import * as Sentry from '@sentry/browser';
 import Head from '../components/head';
 import Game from '../components/game';
+import Nav from '../components/nav';
 
 const styles = theme => ({
   root: {
@@ -44,6 +45,7 @@ const Index = (props) => {
   return (
     <React.Fragment>
       <Head title="NBA Games" />
+      <Nav title="NBA Games" />
       <Grid
         container
         direction="column"
@@ -51,9 +53,9 @@ const Index = (props) => {
         spacing={8}
         className={root}
       >
-        <Grid item>
+        {/* <Grid item>
           <Typography variant="h1" color="primary">NBA Games</Typography>
-        </Grid>
+        </Grid> */}
         {Games}
         <Grid item>
           <Typography variant="h5">
