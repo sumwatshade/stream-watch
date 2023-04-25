@@ -10,7 +10,7 @@
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
     "@sentry/browser": "^5.0.8",
-    "aws-sdk": "^2.437.0",
+    "aws-sdk": "^2.1354.0",
     "aws-serverless-express": "^3.3.6",
     "isomorphic-unfetch": "^3.0.0",
     "next": "^8.0.4",
